@@ -11,7 +11,7 @@ A Minecraft clone
 - Crafting system.
 - Tile entities (incomplete).
 - Chest system (Currently broken, see Known issues below).
-- Auto save game. (%APPDATA%\.freecraft\saves\world1)
+- Auto save game. (%APPDATA%\\.freecraft\saves\world1)
 # Features I may add soon
 - Furnace smelting system.
 - Settings menu.
