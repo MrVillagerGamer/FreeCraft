@@ -1,0 +1,19 @@
+#version 430
+in vec3 fposition;
+uniform float time;
+uniform vec3 lightDir;
+uniform vec4 fogColor;
+out vec4 outcolor;
+void main() {
+	vec3 npos = normalize(fposition);
+	float blend = clamp(npos.y*4, 0, 1);
+	vec3 color = mix(fogColor.rgb, mix(fogColor.rgb, vec3(1), -0.5 * length(fogColor.rgb)), blend);
+	float posx = npos.x * sign(lightDir.x);
+	float blend2 = clamp(clamp(dot(lightDir, npos)*1, 0, 1) * abs(pow((1.0 - lightDir.y), 0.5)), 0, 1) * (1.0 - blend);
+	color = mix(color, color * vec3(1.0, 0.5, 0.0) * 1.5, blend2 * 0.5);
+	
+	// Render sun
+	float directLight = pow(clamp(dot(npos, normalize(lightDir)), 0, 1), 500) * 1.5;
+	color += vec3(directLight*1.5, directLight, directLight*0.5);
+	outcolor = vec4(color, 1);
+}
