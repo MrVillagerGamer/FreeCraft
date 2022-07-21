@@ -43,7 +43,7 @@ public class WorldGenerator {
 			for(int z = 0; z < Chunk.SIZE; z++) {
 				double div = 2.0D;
 				int min = 60, max = 120;
-				int seaLevel = (int)((max-min)/2.5f+min);
+				int seaLevel = (int)((max-min)/3f+min);
 				int az = z + pos.z * Chunk.SIZE;
 				for(int y = 0; y < min; y++) {
 					data.setBlock(new BlockPos(x, y, z), 1);

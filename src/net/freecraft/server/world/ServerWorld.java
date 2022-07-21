@@ -159,9 +159,9 @@ public class ServerWorld extends World {
 										addFeaturesIntoChunk(new ChunkPos(pos.x+i, pos.z+k), data);
 										Chunk chunk = chunks[pos.x+i][pos.z+k];
 										featuredChunks[pos.x+i][pos.z+k] = true;
-										SetChunkPacket packet = new SetChunkPacket(new ChunkPos(pos.x+i, pos.z+k), null);
-										packet.compressData(chunk.getData());
-										FreeCraftServer.get().getNetHandler().send(null, packet);
+										//SetChunkPacket packet = new SetChunkPacket(new ChunkPos(pos.x+i, pos.z+k), null);
+										//packet.compressData(chunk.getData());
+										//FreeCraftServer.get().getNetHandler().send(null, packet);
 									}
 								}
 							}
