@@ -23,6 +23,7 @@ public class ClientWorld extends World implements Runnable{
 	protected SkyMesh skyMesh;
 	protected List<Chunk> renderChunks = new CopyOnWriteArrayList<Chunk>();
 	protected List<Chunk> activeChunks = new CopyOnWriteArrayList<Chunk>();
+	protected List<Chunk> rebuildChunks = new CopyOnWriteArrayList<Chunk>();
 	private Thread meshingThread;
 	public ClientWorld() {
 		meshingThread = new Thread(this);
@@ -50,6 +51,7 @@ public class ClientWorld extends World implements Runnable{
 						}
 					}
 					if(doMeshing && idx < 10) {
+						((ClientChunk)chunk).getData().buildLighting(((ClientChunk)chunk).getMesh().getPos());
 						((ClientChunk)chunk).getMesh().build();
 						renderChunks.add(chunk);
 						idx++;
@@ -84,11 +86,11 @@ public class ClientWorld extends World implements Runnable{
 		}
 		for(Chunk chunk : toBuild) {
 			if(chunk instanceof ClientChunk) {
-					new RenderThreadRunner(((ClientChunk)chunk).getMesh(), "dispose", new Object[0]);
-					renderChunks.remove(chunk);
-				((ClientChunk)chunk).getMesh().build();
+				rebuildChunks.add(chunk);	
+				
+					/*((ClientChunk)chunk).getMesh().build();
 				new RenderThreadRunner(((ClientChunk)chunk).getMesh(), "load", new Object[0]);
-					renderChunks.add(chunk);
+					renderChunks.add(chunk);*/
 			}
 		}
 	}
@@ -118,6 +120,11 @@ public class ClientWorld extends World implements Runnable{
 		cloudMesh.render();
 		
 		for(Chunk chunk : renderChunks) {
+			if(rebuildChunks.contains(chunk)) {
+				((ClientChunk)chunk).getData().buildLighting(((ClientChunk)chunk).getMesh().getPos());
+				((ClientChunk)chunk).getMesh().build();
+				rebuildChunks.remove(chunk);
+			}
 			if(((ClientChunk)chunk).getMesh().justBuilt()) {
 				((ClientChunk)chunk).getMesh().load();
 			}
