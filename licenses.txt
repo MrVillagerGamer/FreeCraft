@@ -3,3 +3,4 @@ For lib/jogl*, see lib/jogl-licenses.txt
 For lib/gluegen*, see lib/gluegen-licenses.txt
 For lib/joml*, see lib/joml-license.txt
 For lib/flow-noise*, see lib/flow-noise-license.txt
+For lib/lz4-java*, see lib/lz4-java-license.txt
