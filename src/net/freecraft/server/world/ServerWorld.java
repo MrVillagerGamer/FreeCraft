@@ -11,6 +11,7 @@ import net.freecraft.entity.EntityTypes;
 import net.freecraft.net.NetConnection;
 import net.freecraft.net.packet.SetCameraEntityPacket;
 import net.freecraft.net.packet.SetChunkPacket;
+import net.freecraft.net.packet.SetTileDataPacket;
 import net.freecraft.net.packet.SpawnEntityPacket;
 import net.freecraft.server.FreeCraftServer;
 import net.freecraft.server.util.ServerRegistries;
@@ -132,6 +133,11 @@ public class ServerWorld extends World {
 	public int setBlockLocally(BlockPos bpos, int id) {
 		return super.setBlockLocally(bpos, id);
 	}
+	@Override
+	public void setTileData(BlockPos pos, Data data) {
+		setTileDataLocally(pos, data);
+		FreeCraftServer.get().getNetHandler().send(null, new SetTileDataPacket(pos, data));
+	}
 	public Chunk getOrGenChunk(ChunkPos pos) {
 		if(chunks[pos.x][pos.z] == null) {
 			ChunkData data = saver.load(pos);
@@ -141,7 +147,7 @@ public class ServerWorld extends World {
 				generator.generateChunk(pos, data);
 				chunks[pos.x][pos.z] = new Chunk(data);
 				generator.addFeatures(pos);
-				
+
 				for(int i = -1; i <= 1; i++) {
 					for(int k = -1; k <= 1; k++) {
 						if(pos.x+i >= 0 && pos.x+i < SIZE) {
@@ -166,7 +172,7 @@ public class ServerWorld extends World {
 				data.buildLighting(pos);
 				for(int i = -1; i <= 1; i++) {
 					for(int k = -1; k <= 1; k++) {
-						if(i == 0 && k == 0) continue; 
+						if(i == 0 && k == 0) continue;
 						if(pos.x+i >= 0 && pos.x+i < SIZE) {
 							if(pos.z+k >= 0 && pos.z+k < SIZE) {
 								if(chunks[pos.x+i][pos.z+k] != null && chunkNeighborsExist(new ChunkPos(pos.x+i, pos.z+k))) {
@@ -183,7 +189,7 @@ public class ServerWorld extends World {
 				data.buildLighting(pos);
 				for(int i = -1; i <= 1; i++) {
 					for(int k = -1; k <= 1; k++) {
-						if(i == 0 && k == 0) continue; 
+						if(i == 0 && k == 0) continue;
 						if(pos.x+i >= 0 && pos.x+i < SIZE) {
 							if(pos.z+k >= 0 && pos.z+k < SIZE) {
 								if(chunks[pos.x+i][pos.z+k] != null && chunkNeighborsExist(new ChunkPos(pos.x+i, pos.z+k))) {
@@ -196,7 +202,8 @@ public class ServerWorld extends World {
 			}
 			HashMap<BlockPos, Data> tiledatas = saver.loadTileData(pos, data);
 			for(Entry<BlockPos, Data> e : tiledatas.entrySet()) {
-				setTileDataLocally(e.getKey(), e.getValue());
+				//System.out.println(e.getValue());
+				setTileData(e.getKey(), e.getValue());
 			}
 			chunksList.add(pos);
 		}

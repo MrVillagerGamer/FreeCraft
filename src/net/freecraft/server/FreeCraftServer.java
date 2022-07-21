@@ -81,7 +81,6 @@ public class FreeCraftServer extends FreeCraft {
 		thread.start();
 		while(netRunning) {
 			getWorld().update();
-			Thread.yield();
 		}
 		world.dispose();
 		world = null;

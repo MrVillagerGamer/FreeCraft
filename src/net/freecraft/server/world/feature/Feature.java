@@ -43,9 +43,9 @@ public class Feature extends RegistryEntry{
 	}
 	public boolean canGenerateInBiome(int i) {
 		if(biomeListMode == ListMode.WHITELIST) {
-			return listedBiomes.contains((Integer)i);
+			return listedBiomes.contains(i);
 		}
-		return !listedBiomes.contains((Integer)i);
+		return !listedBiomes.contains(i);
 	}
 	public boolean canGenerateAt(BlockPos pos) {
 		return true;

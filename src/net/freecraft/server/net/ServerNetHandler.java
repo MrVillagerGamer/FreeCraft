@@ -1,7 +1,7 @@
 package net.freecraft.server.net;
 
-import net.freecraft.net.NetConnection;
 import net.freecraft.net.INetHandler;
+import net.freecraft.net.NetConnection;
 import net.freecraft.net.packet.INetPacket;
 import net.freecraft.server.FreeCraftServer;
 

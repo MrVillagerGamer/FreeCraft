@@ -33,25 +33,27 @@ public class ServerSocketHandler implements Runnable {
 	private static ServerSocket ss;
 	private Socket s;
 	private NetConnection conn;
-	private List<Chunk> sentChunks = new ArrayList<Chunk>();
+	private List<Chunk> sentChunks = new ArrayList<>();
 	public ServerSocketHandler() {
 		try {
 			if(ss == null) {
-				ss = new ServerSocket(8080);
+				ss = new ServerSocket(25560);
 			}
 			s = ss.accept();
 			World world = FreeCraftServer.get().getWorld();
-			
+
 			conn = new NetConnection(curId);
 			curId++;
 			conn.getPacketQueue().enqueue(new SetTimePacket(world.getTime()));
+
+			FreeCraftServer.get().getConnections().add(conn);
 			initChunks(world.getSpawnPos());
 			initEntities();
-			FreeCraftServer.get().getConnections().add(conn);
 			Thread thread = new Thread(this);
 			thread.setName("SERVER-" + (conn.getId() + 2));
 			thread.start();
 		} catch(SocketException e) {
+			e.printStackTrace();
 			// Do not print, socket exceptions are expected on server shutdown
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -66,7 +68,7 @@ public class ServerSocketHandler implements Runnable {
 				cpos.x += x;
 				cpos.z += z;
 				world.getOrGenChunk(cpos);
-				
+
 			}
 		}
 		for(int x = -world.getViewDistance(); x <= world.getViewDistance(); x++) {
