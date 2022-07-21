@@ -22,7 +22,7 @@ public class World {
 	public static final int SIZE = 1024;
 	public static final int TICK_RATE = 20;
 	public static final int DAY_LENGTH = 1200;
-	public static final int START_TIME = DAY_LENGTH/8*20;
+	public static final int START_TIME = DAY_LENGTH/6*20;
 	public static final double GRAVITY = -20.0;
 	protected Chunk[][] chunks = new Chunk[SIZE][SIZE];
 	protected List<Entity> entities = new ArrayList<>();
@@ -61,10 +61,10 @@ public class World {
 	}
 	public int getViewDistanceInBlocks() {
 		return getViewDistance() * Chunk.SIZE;
-		
+
 	}
 	public int getViewDistance() {
-		return 10;
+		return 16;
 	}
 	public int findNextEntityId() {
 		int id = 0;
@@ -184,8 +184,8 @@ public class World {
 		perlin2.setSeed(1337);
 		perlin2.setFrequency(0.5D);
 		perlin2.setOctaveCount(1);
-		double randVal = 0;//perlin2.getValue(pos.x/1.0D, 0, pos.z/1.0D);
-		return Math.max(Math.min((int)((perlin.getValue(pos.x, 0, pos.z)*0.5+0.5+(randVal*2-1)/(100D/count))*1.0f*Registries.BIOMES.getAll().size()), Registries.BIOMES.getAll().size() - 1), 0);
+		double randVal = perlin2.getValue(pos.x/1.0D, 0, pos.z/1.0D);
+		return Math.max(Math.min((int)Math.round((perlin.getValue(pos.x, 0, pos.z)*0.5+0.5+(randVal*2-1)/(100D/count))*1.0f*Registries.BIOMES.getAll().size()), Registries.BIOMES.getAll().size() - 1), 0);
 	}
 	public void setLight(BlockPos bpos, byte light) {
 		Chunk chunk = getChunk(bpos.toChunkPos());

@@ -4,7 +4,7 @@ import net.freecraft.data.Data;
 
 public class SaveDataV1 extends Data {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	public SaveDataV1(String name) {

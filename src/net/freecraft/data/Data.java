@@ -8,7 +8,7 @@ import net.freecraft.item.inventory.Inventory;
 // Data for Version 1: DO NOT ADD OR REARRANGE INSTANCE VARIABLES
 public class Data implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	public static final Data DEFAULT = new Data("");

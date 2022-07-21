@@ -32,11 +32,6 @@ public class Blocks {
 		Registries.BLOCKS.register(7, SAND);
 		Registries.BLOCKS.register(8, WORKBENCH);
 		Registries.BLOCKS.register(9, WATER);
-		Registries.BLOCKS.register(10, PERMAGRASS);
-		Registries.BLOCKS.register(11, PERMADIRT);
-		Registries.BLOCKS.register(12, FIR_WOOD);
-		Registries.BLOCKS.register(13, FIR_LEAVES);
-		Registries.BLOCKS.register(14, FIR_PLANKS);
 		Registries.BLOCKS.register(15, GRAVEL);
 		Registries.BLOCKS.register(16, CHEST);
 	}

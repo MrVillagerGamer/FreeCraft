@@ -12,7 +12,7 @@ import net.freecraft.util.Vec3D;
 
 public class ChunkData implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private char[][][] blocks;
@@ -31,10 +31,10 @@ public class ChunkData implements Serializable {
 	public int getBlock(BlockPos pos) {
 		if(pos.y < 0 || pos.y >= Chunk.HEIGHT) return 0;
 		return blocks[pos.x][pos.y][pos.z];
-	} 
+	}
 	public int getBlockFast(BlockPos pos) {
 		return blocks[pos.x][pos.y][pos.z];
-	} 
+	}
 	public void setBlock(BlockPos pos, int id) {
 		if(pos.y < 0 || pos.y >= Chunk.HEIGHT) return;
 		blocks[pos.x][pos.y][pos.z] = (char)id;
@@ -86,11 +86,11 @@ public class ChunkData implements Serializable {
 									int oldlight = lights[x][y][z];
 									int blockLight = oldlight & 0xF0;
 									int skyLight = oldlight & 0x0F;
-									
+
 									int noldlight = world.getLight(nworldpos);
 									int nblockLight = noldlight & 0xF0;
 									int nskyLight = noldlight & 0x0F;
-									
+
 									if((skyLight > 0 || blockLight > 0)
 									&& nskyLight < (15-step) && nblockLight < ((15-step-1)<<4)) {
 										if(blockLight > 0) blockLight = blockLight - 0x10;
@@ -101,7 +101,7 @@ public class ChunkData implements Serializable {
 								}
 							}
 						}
-					
+
 					}
 				}
 			}
