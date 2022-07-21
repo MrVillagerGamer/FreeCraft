@@ -17,7 +17,7 @@ public class ClientSocketHandler implements Runnable {
 	private NetConnection conn;
 	public ClientSocketHandler(String addr) {
 		try {
-			s = new Socket(addr, 8080);
+			s = new Socket(addr, 25560);
 			conn = new NetConnection(0);
 			FreeCraftClient.get().setConnection(conn);
 			conn.getPacketQueue().enqueue(new LogInPacket(FreeCraftClient.get().getUsername(), FreeCraftClient.get().getPasswordHash()));

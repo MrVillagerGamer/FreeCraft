@@ -22,7 +22,7 @@ public class UITextField extends UIComponent implements IComponentKeyHandler {
 	}
 	@Override
 	public void update() {
-		
+
 	}
 	@Override
 	public void render(Graphics g) {
@@ -64,6 +64,6 @@ public class UITextField extends UIComponent implements IComponentKeyHandler {
 	}
 	@Override
 	public void keyUp(int code, char c) {
-		
+
 	}
 }

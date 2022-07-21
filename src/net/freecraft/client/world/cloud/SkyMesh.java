@@ -27,7 +27,7 @@ public class SkyMesh {
 		Renderer renderer = FreeCraftClient.get().getRenderer();
 		GL2 gl = renderer.getGL2();
 		synchronized(gl) {
-			data = MeshUtil.loadCube(new Vec3D(2, 2, 2), new Vec3D(-1, -1, -1));
+			data = MeshUtil.loadCube(new Vec3D(4, 4, 4), new Vec3D(-2, -2, -2));
 		}
 	}
 	public void render() {

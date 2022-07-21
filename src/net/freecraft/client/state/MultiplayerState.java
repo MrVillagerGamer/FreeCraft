@@ -45,7 +45,7 @@ public class MultiplayerState extends State {
 	}
 	@Override
 	public void stop() {
-		
+
 	}
 	@Override
 	public UIComponent[] getUIComponents() {

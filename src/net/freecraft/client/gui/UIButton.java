@@ -22,7 +22,7 @@ public class UIButton extends UIComponent {
 	}
 	@Override
 	public void update() {
-		
+
 	}
 	@Override
 	public void render(Graphics g) {

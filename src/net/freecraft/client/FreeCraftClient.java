@@ -13,6 +13,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 import net.freecraft.FreeCraft;
 import net.freecraft.client.entity.RenderEntityTypes;
@@ -116,7 +117,7 @@ public class FreeCraftClient extends FreeCraft {
 			frame.setUndecorated(true);
 		}
 		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -164,7 +165,7 @@ public class FreeCraftClient extends FreeCraft {
 			Input.tick();
 			RenderThreadRunner.runPending();
 			State.get().update();
-			Thread.yield();
+			//Thread.yield();
 		}
 		disconnect();
 		try {
@@ -178,9 +179,8 @@ public class FreeCraftClient extends FreeCraft {
 		if(renderer != null) {
 			renderer.dispose();
 		}
-		frame.dispose();
 		System.exit(0);
-		
+
 	}
 	public void joinIntegratedServer() {
 		FreeCraftServer.start();

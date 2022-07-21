@@ -22,7 +22,7 @@ public class UILabel extends UIComponent implements IComponentKeyHandler {
 	}
 	@Override
 	public void update() {
-		
+
 	}
 	@Override
 	public void render(Graphics g) {
@@ -44,10 +44,10 @@ public class UILabel extends UIComponent implements IComponentKeyHandler {
 	}
 	@Override
 	public void keyDown(int code, char c) {
-		
+
 	}
 	@Override
 	public void keyUp(int code, char c) {
-		
+
 	}
 }

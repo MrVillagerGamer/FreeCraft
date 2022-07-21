@@ -30,6 +30,6 @@ public class CraftingRecipes {
 		ClientRegistries.CRAFTING_RECIPES.register(1, STICK);
 		ClientRegistries.CRAFTING_RECIPES.register(2, WORKBENCH);
 		ClientRegistries.CRAFTING_RECIPES.register(3, CHEST);
-		
+
 	}
 }

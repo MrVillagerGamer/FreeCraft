@@ -1,6 +1,7 @@
 package net.freecraft.client.world.cloud;
 
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES3;
 
 import net.freecraft.client.FreeCraftClient;
 import net.freecraft.client.render.Renderer;
@@ -43,7 +44,7 @@ public class CloudMesh {
 		synchronized(ogl) {
 			dispose();
 			//gl.glNewList(list, GL2.GL_COMPILE);
-			gl.glBegin(GL2.GL_QUADS);
+			gl.glBegin(GL2ES3.GL_QUADS);
 			int size = FreeCraftClient.get().getWorld().getViewDistanceInBlocks() * 2;
 			for(int p = 0; p < 4; p++) {
 				gl.glTexCoord2f((float)TEXCOORDS[p].getX() * size / 256, (float)TEXCOORDS[p].getY() * size / 256);

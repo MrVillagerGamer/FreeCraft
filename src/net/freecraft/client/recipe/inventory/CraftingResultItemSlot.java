@@ -5,7 +5,7 @@ import net.freecraft.item.ItemSlot;
 public class CraftingResultItemSlot extends ItemSlot {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private CraftingInventory craftInv;

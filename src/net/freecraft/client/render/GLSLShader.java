@@ -9,6 +9,7 @@ import java.nio.IntBuffer;
 import java.nio.charset.StandardCharsets;
 
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES2;
 
 import net.freecraft.client.FreeCraftClient;
 import net.freecraft.util.Logger;
@@ -21,23 +22,23 @@ public class GLSLShader {
 	public GLSLShader(String vertexPath, String fragmentPath) {
 		gl = FreeCraftClient.get().getRenderer().getGL2();
 		this.program = gl.glCreateProgram();
-		this.vertexShader = gl.glCreateShader(GL2.GL_VERTEX_SHADER);
-		this.fragmentShader = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
+		this.vertexShader = gl.glCreateShader(GL2ES2.GL_VERTEX_SHADER);
+		this.fragmentShader = gl.glCreateShader(GL2ES2.GL_FRAGMENT_SHADER);
 		String src = loadShader(vertexPath);
 		IntBuffer buf = IntBuffer.allocate(1);
 		buf.put(src.length());
 		buf.rewind();
 		gl.glShaderSource(vertexShader, 1, new String[] {src}, buf);
-		
+
 		src = loadShader(fragmentPath);
 		buf = IntBuffer.allocate(1);
 		buf.put(src.length());
 		buf.rewind();
 		gl.glShaderSource(fragmentShader, 1, new String[] {src}, buf);
-		
+
 		gl.glCompileShader(vertexShader);
 		gl.glCompileShader(fragmentShader);
-		
+
 		buf = IntBuffer.allocate(1);
 		ByteBuffer str = ByteBuffer.allocate(1024);
 		gl.glGetShaderInfoLog(vertexShader, 1024, buf, str);
@@ -45,7 +46,7 @@ public class GLSLShader {
 		if(msg.trim().length() > 0) {
 			Logger.error(msg);
 		}
-		
+
 		buf = IntBuffer.allocate(1);
 		str = ByteBuffer.allocate(1024);
 		gl.glGetShaderInfoLog(fragmentShader, 1024, buf, str);
@@ -53,15 +54,15 @@ public class GLSLShader {
 		if(msg.trim().length() > 0) {
 			Logger.error(msg);
 		}
-		
+
 		gl.glAttachShader(program, vertexShader);
 		gl.glAttachShader(program, fragmentShader);
-		
+
 		gl.glLinkProgram(program);
 		gl.glValidateProgram(program);
-		
+
 		gl.glUseProgram(program);
-		
+
 		int loc = gl.glGetUniformLocation(program, "blockAtlas");
 		gl.glUniform1i(loc, 0);
 		loc = gl.glGetUniformLocation(program, "itemAtlas");
@@ -92,13 +93,13 @@ public class GLSLShader {
 	}
 	public void dispose() {
 		gl.glUseProgram(0);
-		
+
 		gl.glDetachShader(program, vertexShader);
 		gl.glDetachShader(program, fragmentShader);
-		
+
 		gl.glDeleteShader(vertexShader);
 		gl.glDeleteShader(fragmentShader);
-		
+
 		gl.glDeleteProgram(program);
 	}
 	public void updateTime(float time) {

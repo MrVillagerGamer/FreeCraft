@@ -36,6 +36,6 @@ public abstract class State {
 		return new UIComponent[0];
 	}
 	public void mouseClick(int x, int y) {
-		
+
 	}
 }

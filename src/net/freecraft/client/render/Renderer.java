@@ -7,11 +7,14 @@ import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 
 import com.jogamp.opengl.DefaultGLCapabilitiesChooser;
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES1;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLDrawableFactory;
 import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.util.awt.AWTGLReadBufferUtil;
 
 import net.freecraft.FreeCraft;
@@ -43,32 +46,32 @@ public class Renderer {
 		caps.setDepthBits(24);
 		caps.setDoubleBuffered(false);
 		caps.setOnscreen(false);
-		
+
 		GLDrawableFactory factory = GLDrawableFactory.getFactory(profile);
 		drawable = factory.createOffscreenAutoDrawable(factory.getDefaultDevice(), caps, new DefaultGLCapabilitiesChooser(), FreeCraftClient.get().getGLWidth(), FreeCraftClient.get().getGLHeight());
 		drawable.display();
 		drawable.getContext().makeCurrent();
 		gl = drawable.getGL().getGL2();
 		//glu = new GLU();
-		gl.glEnable(GL2.GL_DEPTH_TEST);
-		gl.glEnable(GL2.GL_TEXTURE_2D);
-		gl.glEnable(GL2.GL_CULL_FACE);
-		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_FASTEST);
-		gl.glHint(GL2.GL_POINT_SMOOTH_HINT, GL2.GL_FASTEST);
-		gl.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_FASTEST);
+		gl.glEnable(GL.GL_DEPTH_TEST);
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		gl.glEnable(GL.GL_CULL_FACE);
+		gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_FASTEST);
+		gl.glHint(GL2ES1.GL_POINT_SMOOTH_HINT, GL.GL_FASTEST);
+		gl.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_FASTEST);
 		//gl.glEnable(GL2.GL_BLEND);
 		//gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-		
+
 		gl.glViewport(0, 0, FreeCraftClient.get().getGLWidth(), FreeCraftClient.get().getGLHeight());
 		skyColor = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
 		gl.glClearColor(skyColor[0], skyColor[1], skyColor[2], skyColor[3]);
-		gl.glEnable(GL2.GL_FOG);
+		gl.glEnable(GL2ES1.GL_FOG);
 		FloatBuffer fogColor = FloatBuffer.allocate(4);
 		fogColor.put(skyColor);
 		fogColor.rewind();
-		gl.glFogfv(GL2.GL_FOG_COLOR, fogColor);
-		gl.glFogi(GL2.GL_FOG_MODE, GL2.GL_EXP2);
-		gl.glFogf(GL2.GL_FOG_DENSITY, 0.05f);
+		gl.glFogfv(GL2ES1.GL_FOG_COLOR, fogColor);
+		gl.glFogi(GL2ES1.GL_FOG_MODE, GL2ES1.GL_EXP2);
+		gl.glFogf(GL2ES1.GL_FOG_DENSITY, 0.05f);
 		prepareFrame();
 		inited = true;
 	}
@@ -84,8 +87,8 @@ public class Renderer {
 			atlas.load();
 		}
 		for(Atlas atlas : ClientRegistries.ATLASES.getAll()) {
-			gl.glActiveTexture(GL2.GL_TEXTURE0+atlas.getId());
-			gl.glBindTexture(GL2.GL_TEXTURE_2D, atlas.getGLTexture());
+			gl.glActiveTexture(GL.GL_TEXTURE0+atlas.getId());
+			gl.glBindTexture(GL.GL_TEXTURE_2D, atlas.getGLTexture());
 		}
 	}
 	private int viewEntityId;
@@ -95,10 +98,11 @@ public class Renderer {
 		if(cloudShader != null) cloudShader.dispose();
 		if(waterShader != null) waterShader.dispose();
 		if(skyShader != null) skyShader.dispose();
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
 		for(Atlas atlas : ClientRegistries.ATLASES.getAll()) {
 			atlas.dispose();
 		}
+		gl.glFlush();
 		drawable.getContext().release();
 		drawable.getContext().destroy();
 		drawable.setRealized(false);
@@ -106,15 +110,14 @@ public class Renderer {
 	public void beginCloudRendering() {
 		gl.glUseProgram(cloudShader.getProgramHandle());
 		setupCloudModelview();
-		gl.glEnable(GL2.GL_BLEND);
-		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glDisable(GL2.GL_CULL_FACE);
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glDisable(GL.GL_CULL_FACE);
 	}
 	public void endCloudRendering() {
 		gl.glUseProgram(shader.getProgramHandle());
 		setupModelview();
-		gl.glDisable(GL2.GL_BLEND);
-		gl.glEnable(GL2.GL_CULL_FACE);
+		gl.glEnable(GL.GL_CULL_FACE);
 	}
 	private void prepareFrame() {
 		World world = FreeCraftClient.get().getWorld();
@@ -166,44 +169,44 @@ public class Renderer {
 			shader.updateViewPos(pos);
 		}
 		gl.glClearColor(color[0], color[1], color[2], color[3]);
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT|GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);
 		//gl.glMatrixMode(GL2.GL_PROJECTION);
 		//gl.glLoadIdentity();
 		//glu.gluPerspective(70, FreeCraftClient.get().getGLWidth()/(float)FreeCraftClient.get().getGLHeight(), 0.1f, 1000.0f);
-		
+
 		setupModelview();
 	}
 	public void beginSkyRendering() {
 		synchronized(gl) {
 			gl.glUseProgram(skyShader.getProgramHandle());
 			setupSkyModelview();
-			gl.glDisable(GL2.GL_CULL_FACE);
+			gl.glDisable(GL.GL_CULL_FACE);
 		}
 	}
 	public void endSkyRendering() {
 		synchronized(gl) {
-			gl.glClear(GL2.GL_DEPTH_BUFFER_BIT);
+			gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 			gl.glUseProgram(shader.getProgramHandle());
-			gl.glEnable(GL2.GL_CULL_FACE);
+			gl.glEnable(GL.GL_CULL_FACE);
 		}
 	}
 	public void beginWaterRendering() {
 		synchronized(gl) {
 			gl.glUseProgram(waterShader.getProgramHandle());
-			gl.glEnable(GL2.GL_BLEND);
-			gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-			gl.glDisable(GL2.GL_CULL_FACE);
+			gl.glEnable(GL.GL_BLEND);
+			gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+			gl.glDisable(GL.GL_CULL_FACE);
 		}
 	}
 	public void endWaterRendering() {
 		synchronized(gl) {
 			gl.glUseProgram(shader.getProgramHandle());
-			gl.glDisable(GL2.GL_BLEND);
-			gl.glEnable(GL2.GL_CULL_FACE);
+			gl.glDisable(GL.GL_BLEND);
+			gl.glEnable(GL.GL_CULL_FACE);
 		}
 	}
 	private void setupSkyModelview() {
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		Entity cam = getViewEntity();
 		Vec3D fw = new Vec3D(0, 0, -1);
@@ -221,7 +224,7 @@ public class Renderer {
 		}
 	}
 	private void setupCloudModelview() {
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		Entity cam = getViewEntity();
 		Vec3D pos = FreeCraftClient.get().getWorld().getSpawnPos();
@@ -241,7 +244,7 @@ public class Renderer {
 		}
 	}
 	private void setupModelview() {
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		Entity cam = getViewEntity();
 		Vec3D pos = FreeCraftClient.get().getWorld().getSpawnPos();

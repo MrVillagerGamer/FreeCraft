@@ -23,7 +23,7 @@ public class UIHotbar extends UIComponent implements IComponentMouseHandler {
 	}
 	@Override
 	public void update() {
-		
+
 	}
 	@Override
 	public void render(Graphics g) {
@@ -76,6 +76,6 @@ public class UIHotbar extends UIComponent implements IComponentMouseHandler {
 	}
 	@Override
 	public void mouseClick(int x, int y, int btn) {
-		
+
 	}
 }

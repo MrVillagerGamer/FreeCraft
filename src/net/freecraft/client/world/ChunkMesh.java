@@ -81,6 +81,12 @@ public class ChunkMesh {
 			}
 		}
 	}
+	
+	// Any variable name ending in a '2'
+	// means its a water mesh, similar
+	// variables without the 2 represent
+	// an opaque block mesh
+	
 	private Vec3D[] colors;
 	private Vec3D[] normals;
 	private Vec3D[] vertices;
@@ -91,6 +97,9 @@ public class ChunkMesh {
 	private Vec3D[] vertices2;
 	private Vec2D[] texcoords2;
 	
+	private float[] meshData;
+	private float[] meshData2;
+
 	public void load() {
 		GL2 ogl = FreeCraftClient.get().getRenderer().getGL2();
 		dispose();
@@ -101,43 +110,14 @@ public class ChunkMesh {
 		// Water mesh
 		//gl2 = new MeshCompiler();
 		//gl2.glBegin(GL2.GL_QUADS);
-		
+
 		// Normal mesh
 		//gl = new MeshCompiler();
 		//gl.glBegin(GL2.GL_QUADS);
-		if(vertices == null) {
+		if(meshData == null) {
 			build();
 		}
-		float[] meshData = new float[vertices.length*11];
-		for(int i = 0; i < vertices.length; i++) {
-			meshData[i*11+0] = (float) vertices[i].getX();
-			meshData[i*11+1] = (float) vertices[i].getY();
-			meshData[i*11+2] = (float) vertices[i].getZ();
-			meshData[i*11+3] = (float) normals[i].getX();
-			meshData[i*11+4] = (float) normals[i].getY();
-			meshData[i*11+5] = (float) normals[i].getZ();
-			meshData[i*11+6] = (float) colors[i].getX();
-			meshData[i*11+7] = (float) colors[i].getY();
-			meshData[i*11+8] = (float) colors[i].getZ();
-			meshData[i*11+9] = (float) texcoords[i].getX();
-			meshData[i*11+10] = (float) texcoords[i].getY();
-		}
-		
-		float[] meshData2 = new float[vertices2.length*11];
-		for(int i = 0; i < vertices2.length; i++) {
-			meshData2[i*11+0] = (float) vertices2[i].getX();
-			meshData2[i*11+1] = (float) vertices2[i].getY();
-			meshData2[i*11+2] = (float) vertices2[i].getZ();
-			meshData2[i*11+3] = (float) normals2[i].getX();
-			meshData2[i*11+4] = (float) normals2[i].getY();
-			meshData2[i*11+5] = (float) normals2[i].getZ();
-			meshData2[i*11+6] = (float) colors2[i].getX();
-			meshData2[i*11+7] = (float) colors2[i].getY();
-			meshData2[i*11+8] = (float) colors2[i].getZ();
-			meshData2[i*11+9] = (float) texcoords2[i].getX();
-			meshData2[i*11+10] = (float) texcoords2[i].getY();
-		}
-		
+
 		synchronized(ogl) {
 			mesh = MeshUtil.load(meshData);
 			mesh2 = MeshUtil.load(meshData2);
@@ -146,14 +126,8 @@ public class ChunkMesh {
 		}
 		//this.gl = null;
 		//this.gl2 = null;
-		this.colors = null;
-		this.normals = null;
-		this.vertices = null;
-		this.texcoords = null;
-		this.colors2 = null;
-		this.normals2 = null;
-		this.vertices2 = null;
-		this.texcoords2 = null;
+		meshData = null;
+		meshData2 = null;
 	}
 	public void build() {
 		int idx = 0;
@@ -206,10 +180,10 @@ public class ChunkMesh {
 							}else {
 								b2 = FreeCraftClient.get().getWorld().getBlock(npos.fromLocal(pos));
 							}
-							float nx = (float)n.getX();
-							float ny = (float)n.getY();
-							float nz = (float)n.getZ();
 							if(!Registries.BLOCKS.get(b2).isVisible() || (Registries.BLOCKS.get(b2).isTransparent() && !Registries.BLOCKS.get(b2).isFluid())) {
+								float nx = (float)n.getX();
+								float ny = (float)n.getY();
+								float nz = (float)n.getZ();
 								for(int p = 0; p < 4; p++) {
 									normals2[idx] = new Vec3D(nx, ny, nz);
 									Vec2D tc = TEXCOORDS[p];
@@ -227,9 +201,18 @@ public class ChunkMesh {
 									vpos.x += x;
 									vpos.y += y;
 									vpos.z += z;
-									float br = 0;
+									float br = 8;
+									
 									int skyLight = 0, blockLight = 0;
-									for(int i = -1; i <= 0; i++) {
+									byte ll = 0;
+									if(data.inLocalBounds(npos)) {
+										ll = data.getLightFast(npos);
+									}else {
+										ll = FreeCraft.get().getWorld().getLight(npos.fromLocal(getPos()));
+									}
+									skyLight += (ll&0xF);
+									blockLight += (ll&0xF0)>>4;
+									/*for(int i = -1; i <= 0; i++) {
 										for(int j = -1; j <= 0; j++) {
 											for(int k = -1; k <= 0; k++) {
 												Block b3 = Registries.BLOCKS.get(FreeCraft.get().getWorld().getBlock(new BlockPos(getPos().x * Chunk.SIZE + vpos.x + i, vpos.y + j, getPos().z * Chunk.SIZE + vpos.z + k)));
@@ -237,7 +220,7 @@ public class ChunkMesh {
 												if(!b3.isVisible()||b3.isFluid()) val = 1;
 												//else if(b3.isFluid()) val = 0.5f;
 												br += val;
-												
+
 												BlockPos nvpos = new BlockPos(vpos.x + i + (int)nx, vpos.y + j + (int)ny, vpos.z + k + (int)nz);
 												byte ll = 0;
 												if(data.inLocalBounds(nvpos)) {
@@ -249,11 +232,11 @@ public class ChunkMesh {
 												blockLight += (ll&0xF0)>>4;
 											}
 										}
-									}
+									}*/
 									br /= 8.0f;
 									br = Math.min(br*2, 1);
-									
-									colors2[idx] = new Vec3D(skyLight/15.0f/8.0f, blockLight/15.0f/8.0f, br);
+
+									colors2[idx] = new Vec3D(skyLight/15.0f/1.0f, blockLight/15.0f/1.0f, br);
 									if(airAbove) {
 										vertices2[idx] = new Vec3D(pos.x, (pos.y - y) / 2.0 + y, pos.z);
 									}else {
@@ -337,9 +320,18 @@ public class ChunkMesh {
 									vpos.x += x;
 									vpos.y += y;
 									vpos.z += z;
-									float br = 0;
+									float br = 8;
 									int skyLight = 0, blockLight = 0;
-									for(int i = -1; i <= 0; i++) {
+									byte ll = 0;
+									if(data.inLocalBounds(npos)) {
+										ll = data.getLightFast(npos);
+									}else {
+										ll = FreeCraft.get().getWorld().getLight(npos.fromLocal(getPos()));
+									}
+									skyLight += (ll&0xF);
+									blockLight += (ll&0xF0)>>4;
+									
+									/*for(int i = -1; i <= 0; i++) {
 										for(int j = -1; j <= 0; j++) {
 											for(int k = -1; k <= 0; k++) {
 												Block b3 = Registries.BLOCKS.get(FreeCraft.get().getWorld().getBlock(new BlockPos(getPos().x * Chunk.SIZE + vpos.x + i, vpos.y + j, getPos().z * Chunk.SIZE + vpos.z + k)));
@@ -358,11 +350,11 @@ public class ChunkMesh {
 												blockLight += (ll&0xF0)>>4;
 											}
 										}
-									}
+									}*/
 									br /= 8.0f;
 									br = Math.min(br*2, 1);
-									
-									colors[idx] = new Vec3D(skyLight/15.0f/8.0f, blockLight/15.0f/8.0f, br);
+
+									colors[idx] = new Vec3D(skyLight/15.0f/1.0f, blockLight/15.0f/1.0f, br);
 									vertices[idx] = new Vec3D(pos.x, pos.y, pos.z);
 									idx++;
 								}
@@ -372,6 +364,50 @@ public class ChunkMesh {
 				}
 			}
 		}
+		
+		
+		meshData = new float[vertices.length*11];
+		for(int i = 0; i < vertices.length; i++) {
+			meshData[i*11+0] = (float) vertices[i].getX();
+			meshData[i*11+1] = (float) vertices[i].getY();
+			meshData[i*11+2] = (float) vertices[i].getZ();
+			meshData[i*11+3] = (float) normals[i].getX();
+			meshData[i*11+4] = (float) normals[i].getY();
+			meshData[i*11+5] = (float) normals[i].getZ();
+			meshData[i*11+6] = (float) colors[i].getX();
+			meshData[i*11+7] = (float) colors[i].getY();
+			meshData[i*11+8] = (float) colors[i].getZ();
+			meshData[i*11+9] = (float) texcoords[i].getX();
+			meshData[i*11+10] = (float) texcoords[i].getY();
+		}
+
+		meshData2 = new float[vertices2.length*11];
+		for(int i = 0; i < vertices2.length; i++) {
+			meshData2[i*11+0] = (float) vertices2[i].getX();
+			meshData2[i*11+1] = (float) vertices2[i].getY();
+			meshData2[i*11+2] = (float) vertices2[i].getZ();
+			meshData2[i*11+3] = (float) normals2[i].getX();
+			meshData2[i*11+4] = (float) normals2[i].getY();
+			meshData2[i*11+5] = (float) normals2[i].getZ();
+			meshData2[i*11+6] = (float) colors2[i].getX();
+			meshData2[i*11+7] = (float) colors2[i].getY();
+			meshData2[i*11+8] = (float) colors2[i].getZ();
+			meshData2[i*11+9] = (float) texcoords2[i].getX();
+			meshData2[i*11+10] = (float) texcoords2[i].getY();
+		}
+		
+
+		this.colors = null;
+		this.normals = null;
+		this.vertices = null;
+		this.texcoords = null;
+		this.colors2 = null;
+		this.normals2 = null;
+		this.vertices2 = null;
+		this.texcoords2 = null;
+	}
+	public boolean justBuilt() {
+		return this.meshData != null;
 	}
 	public void renderTranslucent() {
 		GL2 gl = FreeCraftClient.get().getRenderer().getGL2();

@@ -25,11 +25,24 @@ public class PlayState extends InGameState {
 	private UIHotbar hotbar;
 	private UICrosshair crosshair;
 	private boolean shifting;
+	private long lastTime;
 	@Override
 	public void start() {
 		FreeCraftClient.get().getRenderer();
 		hotbar = new UIHotbar(9);
 		crosshair = new UICrosshair();
+	}
+	@Override
+	public void update() {
+		super.update();
+		World world = FreeCraftClient.get().getWorld();
+		if((world.getTime() % 20) == 0 && (lastTime % 20) != 0) {
+			Entity viewEntity = FreeCraftClient.get().getRenderer().getViewEntity();
+			if(viewEntity != null) {
+				viewEntity.syncData(null);
+			}
+		}
+		lastTime = world.getTime();
 	}
 	@Override
 	public void render(BufferedImage target) {
@@ -38,6 +51,8 @@ public class PlayState extends InGameState {
 		Graphics g = uitarget.createGraphics();
 		g.setColor(new Color(0, true));
 		g.fillRect(0, 0, FreeCraftClient.get().getUIWidth(), FreeCraftClient.get().getUIHeight());
+
+
 		hotbar.render(g);
 		crosshair.render(g);
 		g.dispose();

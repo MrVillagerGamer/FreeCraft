@@ -15,7 +15,7 @@ public class UICrosshair extends UIComponent {
 	}
 	@Override
 	public void update() {
-		
+
 	}
 	@Override
 	public void render(Graphics g) {

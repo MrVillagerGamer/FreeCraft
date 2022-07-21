@@ -6,13 +6,14 @@ import net.freecraft.item.ItemStack;
 
 public class CraftingInventory2x2 extends CraftingInventory {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	public CraftingInventory2x2() {
 		super(4);
 	}
+	@Override
 	public ItemStack getResult() {
 		for(CraftingRecipe recipe : ClientRegistries.CRAFTING_RECIPES.getAll()) {
 			if(recipe.getWidth() <= 2) {
@@ -44,9 +45,10 @@ public class CraftingInventory2x2 extends CraftingInventory {
 				}
 			}
 		}
-		
+
 		return ItemStack.createEmpty();
 	}
+	@Override
 	public void onCraft() {
 		for(int i = 0; i < 4; i++) {
 			if(get(i).getCount() > 0) {

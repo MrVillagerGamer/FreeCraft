@@ -9,10 +9,10 @@ public class PlayerRenderEntity extends PlayerEntity implements IRenderEntity {
 	}
 	@Override
 	public void dispose() {
-		
+
 	}
 	@Override
 	public void render() {
-		
+
 	}
 }

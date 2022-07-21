@@ -33,7 +33,7 @@ public class UIChestContainer extends UIContainer{
 				}
 			}
 		}
-		
+
 	}
 	@Override
 	public void update() {

@@ -35,7 +35,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
+
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -44,7 +44,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 		int y = (int) (e.getY()/size.getHeight()*FreeCraftClient.get().getUIHeight());
 		for(UIComponent comp : State.get().getUIComponents()) {
 			if(comp instanceof IComponentMouseHandler) {
-				new RenderThreadRunner((IComponentMouseHandler)comp, "mouseClick", x, y, e.getButton() - 1);
+				new RenderThreadRunner(comp, "mouseClick", x, y, e.getButton() - 1);
 			}
 		}
 		List<MouseBinding> bindings = ClientRegistries.MOUSE_BINDINGS.getAll();
@@ -58,19 +58,19 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		
+
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		
+
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {
-		
+
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
-		
+
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -81,7 +81,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 		}
 		for(UIComponent comp : State.get().getUIComponents()) {
 			if(comp instanceof IComponentKeyHandler) {
-				new RenderThreadRunner((IComponentKeyHandler)comp, "keyDown", e.getKeyCode(), e.getKeyChar());
+				new RenderThreadRunner(comp, "keyDown", e.getKeyCode(), e.getKeyChar());
 			}
 		}
 		List<KeyBinding> bindings = ClientRegistries.KEY_BINDINGS.getAll();
@@ -102,7 +102,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 		}
 		for(UIComponent comp : State.get().getUIComponents()) {
 			if(comp instanceof IComponentKeyHandler) {
-				new RenderThreadRunner((IComponentKeyHandler)comp, "keyUp", e.getKeyCode(), e.getKeyChar());
+				new RenderThreadRunner(comp, "keyUp", e.getKeyCode(), e.getKeyChar());
 			}
 		}
 		List<KeyBinding> bindings = ClientRegistries.KEY_BINDINGS.getAll();
@@ -116,33 +116,35 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	}
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		
+
 	}
-	private int lastX, lastY;
+	private static int dx = 0, dy = 0;
 	private boolean ignoreMouseMove = false;
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		FreeCraftClient inst = FreeCraftClient.get();
 		if(ignoreMouseMove) {
 			ignoreMouseMove = false;
 			return;
 		}
-		int dx = e.getXOnScreen()-lastX;
-		int dy = e.getYOnScreen()-lastY;
+		dx += e.getX()-inst.getGLWidth()/2;
+		dy += e.getY()-inst.getGLHeight()/2;
+		
+		if(State.get() != States.PLAY) {
+			//lastX = e.getXOnScreen();
+			//lastY = e.getYOnScreen();
+		}else {
+			//ignoreMouseMove = true;
+			//robot.mouseMove(lastX, lastY);
+			robot.mouseMove(inst.getGLWidth()/2, inst.getGLHeight()/2);
+		}
+		
 		List<MouseBinding> bindings = ClientRegistries.MOUSE_BINDINGS.getAll();
 		for(MouseBinding binding : bindings) {
 			if(binding.getState() == MouseState.MOVE) {
 				//Dimension size = FreeCraftClient.get().getCanvas().getSize();
-				int x = (int)Math.round(dx);///size.getWidth()*FreeCraftClient.WIDTH);
-				int y = (int)Math.round(dy);///size.getHeight()*FreeCraftClient.HEIGHT);
-				new RenderThreadRunner(binding.getHandler(), "onEvent", x, y);
+				new RenderThreadRunner(binding.getHandler(), "onEvent", dx, dy);
 			}
-		}
-		if(State.get() != States.PLAY) {
-			lastX = e.getXOnScreen();
-			lastY = e.getYOnScreen();
-		}else {
-			ignoreMouseMove = true;
-			robot.mouseMove(lastX, lastY);
 		}
 	}
 	@Override
@@ -152,6 +154,9 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 				new RenderThreadRunner((IComponentMouseHandler)comp, "wheelMove", e.getWheelRotation());
 			}
 		}
+	}
+	public static void resetMouseDelta() {
+		dx = 0; dy = 0;
 	}
 	public static void tick() {
 		synchronized(downKeys) {

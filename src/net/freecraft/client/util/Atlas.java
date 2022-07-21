@@ -6,6 +6,7 @@ import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
@@ -36,7 +37,7 @@ public class Atlas extends RegistryEntry {
 		gl.glGenTextures(1, texbuf);
 		tex = texbuf.get(0);
 		try {
-			TextureData textureData = AWTTextureIO.newTextureData(gl.getGLProfile(), img, true); 
+			TextureData textureData = AWTTextureIO.newTextureData(gl.getGLProfile(), img, true);
 			int[] pixels = new int[img.getWidth()*img.getHeight()];
 			for(int x = 0; x < img.getWidth(); x++) {
 				for(int y = 0; y < img.getHeight(); y++) {
@@ -46,12 +47,12 @@ public class Atlas extends RegistryEntry {
 			IntBuffer imgbuf = IntBuffer.allocate(pixels.length);
 			imgbuf.put(pixels);
 			imgbuf.flip();
-			gl.glBindTexture(GL2.GL_TEXTURE_2D, tex);
-			gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
-			gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
-			gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_NEAREST);
-			gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_NEAREST);
-			gl.glTexImage2D(GL2.GL_TEXTURE_2D, 0, textureData.getInternalFormat(), textureData.getWidth(), textureData.getHeight(), 0, textureData.getPixelFormat(), textureData.getPixelType(), textureData.getBuffer());
+			gl.glBindTexture(GL.GL_TEXTURE_2D, tex);
+			gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+			gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+			gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
+			gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
+			gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, textureData.getInternalFormat(), textureData.getWidth(), textureData.getHeight(), 0, textureData.getPixelFormat(), textureData.getPixelType(), textureData.getBuffer());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

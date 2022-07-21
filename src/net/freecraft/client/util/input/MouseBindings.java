@@ -31,6 +31,7 @@ public class MouseBindings {
 				rot = new Vec3D(Math.min(Math.max(rot.getX(), Math.toRadians(-89.5)), Math.toRadians(89.5)), rot.getY(), 0);
 				entity.setRot(rot);
 			}
+			Input.resetMouseDelta();
 		}
 	}, 0, MouseState.MOVE);
 	public static void init() {

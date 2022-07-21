@@ -5,19 +5,19 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.freecraft.client.gui.UIComponent;
 import net.freecraft.client.gui.IComponentMouseHandler;
+import net.freecraft.client.gui.UIComponent;
 import net.freecraft.item.ItemStack;
 
 public class UIContainer extends UIComponent implements IComponentMouseHandler {
 	protected List<UISlot> slots = new ArrayList<>();
 	protected UISlot movedSlot;
 	public UIContainer() {
-		
+
 	}
 	@Override
 	public void update() {
-		
+
 	}
 	@Override
 	public void render(Graphics g) {
@@ -31,14 +31,13 @@ public class UIContainer extends UIComponent implements IComponentMouseHandler {
 		g.setColor(Color.DARK_GRAY);
 		g.drawLine(x+2, y+height-1, x+width-1, y+height-1);
 		g.drawLine(x+width-1, y+2, x+width-1, y+height-1);
-		for(int i = 0; i < slots.size(); i++) {
-			UISlot slot = slots.get(i);
+		for (UISlot slot : slots) {
 			slot.render(g);
 		}
 	}
 	@Override
 	public void wheelMove(int amt) {
-		
+
 	}
 	@Override
 	public void mouseClick(int x, int y, int btn) {

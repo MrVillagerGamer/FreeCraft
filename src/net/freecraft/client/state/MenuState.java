@@ -39,7 +39,7 @@ public class MenuState extends State {
 	}
 	@Override
 	public void stop() {
-		
+
 	}
 	@Override
 	public void escape() {
