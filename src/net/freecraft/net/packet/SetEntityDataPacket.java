@@ -5,7 +5,7 @@ import net.freecraft.data.Data;
 public class SetEntityDataPacket implements INetPacket {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private int entityId;

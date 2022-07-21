@@ -8,5 +8,5 @@ public class CompressedInputStream extends InflaterInputStream{
 	public CompressedInputStream(InputStream in) {
 		super(in, new Inflater(true));
 	}
-	
+
 }

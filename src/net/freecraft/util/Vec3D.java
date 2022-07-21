@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Vec3D implements Serializable{
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	double x, y, z;

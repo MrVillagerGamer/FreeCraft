@@ -6,7 +6,7 @@ import net.freecraft.util.Vec3D;
 public class SpawnEntityPacket implements INetPacket {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private int entityId, typeId;

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Registry<T extends IRegistryEntry> {
 	private Object[] objs = new Object[65536];
-	private List<T> registered = new ArrayList<T>();
+	private List<T> registered = new ArrayList<>();
 	public void register(int rawId, T object) {
 		object.setId(rawId);
 		registered.add(object);
@@ -27,6 +27,6 @@ public class Registry<T extends IRegistryEntry> {
 	}
 	public void clear() {
 		objs = new Object[65536];
-		registered = new ArrayList<T>();
+		registered = new ArrayList<>();
 	}
 }

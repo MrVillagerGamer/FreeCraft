@@ -5,7 +5,7 @@ import net.freecraft.util.Vec3D;
 public class SetEntityRotPacket implements INetPacket {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private int entityId;

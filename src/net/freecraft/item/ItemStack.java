@@ -7,7 +7,7 @@ import net.freecraft.util.Registries;
 
 public class ItemStack implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private int id;

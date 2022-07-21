@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class ItemSlot implements Serializable{
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private ItemStack stack;
@@ -24,9 +24,9 @@ public class ItemSlot implements Serializable{
 		return true;
 	}
 	public void onTake() {
-		
+
 	}
 	public void onGive() {
-		
+
 	}
 }

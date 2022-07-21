@@ -234,7 +234,7 @@ public class Entity {
 		Vec3D v = getForward();
 		v = new Vec3D(v.getX(), 0, v.getZ());
 		v = new Vec3D(v.getX() / v.length(), 0, v.getZ() / v.length());
-		
+
 		return v;
 	}
 }

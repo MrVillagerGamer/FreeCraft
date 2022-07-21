@@ -9,16 +9,18 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
 import net.freecraft.util.ChunkPos;
+import net.freecraft.util.CompressedData;
+import net.freecraft.util.Compression;
 import net.freecraft.world.ChunkData;
 
 public class SetChunkPacket implements INetPacket {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private ChunkPos pos;
-	private byte[] data;
-	public SetChunkPacket(ChunkPos pos, byte[] data) {
+	private CompressedData data;
+	public SetChunkPacket(ChunkPos pos, CompressedData data) {
 		this.pos = pos;
 		this.data = data;
 	}
@@ -28,14 +30,15 @@ public class SetChunkPacket implements INetPacket {
 	public ChunkPos getPos() {
 		return pos;
 	}
-	public byte[] getData() {
+	public CompressedData getData() {
 		return data;
 	}
 	public ChunkData decompressData() {
 		try {
-			ByteArrayInputStream bais = new ByteArrayInputStream(data);
-			InflaterInputStream gzipIn = new InflaterInputStream(bais);
-			ObjectInputStream objectIn = new ObjectInputStream(gzipIn);
+			byte[] decompData = Compression.decompress(data);
+			
+			ByteArrayInputStream bais = new ByteArrayInputStream(decompData);
+			ObjectInputStream objectIn = new ObjectInputStream(bais);
 			ChunkData data = (ChunkData)objectIn.readObject();
 			objectIn.close();
 			return data;
@@ -47,12 +50,11 @@ public class SetChunkPacket implements INetPacket {
 	public void compressData(ChunkData data) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			DeflaterOutputStream gzipOut = new DeflaterOutputStream(baos);
-			ObjectOutputStream objectOut = new ObjectOutputStream(gzipOut);
+			ObjectOutputStream objectOut = new ObjectOutputStream(baos);
 			objectOut.writeObject(data);
 			objectOut.flush();
-			gzipOut.close();
-			this.data = baos.toByteArray();
+			byte[] uncompData = baos.toByteArray();
+			this.data = Compression.compress(uncompData);
 			objectOut.close();
 		} catch(IOException e) {
 			e.printStackTrace();

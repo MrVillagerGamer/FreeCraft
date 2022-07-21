@@ -4,7 +4,7 @@ import net.freecraft.util.BlockPos;
 
 public class SetBlockPacket implements INetPacket {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private int blockId;

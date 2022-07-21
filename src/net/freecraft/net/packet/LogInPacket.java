@@ -3,7 +3,7 @@ package net.freecraft.net.packet;
 public class LogInPacket implements INetPacket {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private String passwordHash;
